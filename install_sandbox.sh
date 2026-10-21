@@ -181,13 +181,27 @@ chmod +x /usr/local/bin/proxychain
 proxychain start
 
 # 8. Deteksi IP Server & Info Docker Sandbox
-SERVER_IP=$(curl -s -4 --max-time 3 https://api.ipify.org 2>/dev/null || curl -s -4 --max-time 3 https://ifconfig.me 2>/dev/null || echo "127.0.0.1")
+HOST_NAME=$(hostname)
+if [[ "$HOST_NAME" =~ ^sbx[-_](.+) ]]; then
+    SBX_ID="${BASH_REMATCH[1]}"
+    DASHBOARD_URL="https://8080-${SBX_ID}.sbx.sandboxes-cloud.docker.com/"
+    IS_SANDBOX=true
+else
+    SERVER_IP=$(curl -s -4 --max-time 3 https://api.ipify.org 2>/dev/null || curl -s -4 --max-time 3 https://ifconfig.me 2>/dev/null || echo "127.0.0.1")
+    DASHBOARD_URL="http://${SERVER_IP}:8080"
+    IS_SANDBOX=false
+fi
 
 echo ""
 echo -e "${CYAN}==============================================================================${NC}"
-echo -e "${GREEN}${BOLD}🎉 PROXYCHAIN GATEWAY BERHASIL DIINSTALL & DIAKTIFKAN DI DOCKER SANDBOX!${NC}"
+echo -e "${GREEN}${BOLD}🎉 PROXYCHAIN GATEWAY BERHASIL DIINSTALL & DIAKTIFKAN!${NC}"
 echo -e "${CYAN}==============================================================================${NC}"
-echo -e "Web Dashboard : ${YELLOW}http://${SERVER_IP}:8080${NC} (Atau http://127.0.0.1:8080)"
+if [ "$IS_SANDBOX" = true ]; then
+    echo -e "Web Dashboard : ${YELLOW}${BOLD}${DASHBOARD_URL}${NC}"
+    echo -e "                (Pastikan port 8080 sudah ditambahkan di menu 'Connect' -> 'Connect via a Port')"
+else
+    echo -e "Web Dashboard : ${YELLOW}${DASHBOARD_URL}${NC} (Atau http://127.0.0.1:8080)"
+fi
 echo -e "Default Auth  : ${CYAN}gemini / gemini${NC}"
 echo -e "Port Awal     : ${CYAN}10001 (Port bertambah dinamis sesuai jumlah proxy Box 1)${NC}"
 echo ""
@@ -197,7 +211,7 @@ echo -e "  - Pantau Log Realtime: ${GREEN}proxychain logs${NC}"
 echo -e "  - Stop / Restart     : ${GREEN}proxychain stop${NC} / ${GREEN}proxychain restart${NC}"
 echo -e "  - Ganti Host Tampil  : ${GREEN}proxychain host <IP_VPS_ATAU_DOMAIN>${NC}"
 echo ""
-echo -e "${BOLD}🔑 Akses dari Laptop via SSH Tunnel (Jika pakai Docker Cloud Sandbox):${NC}"
+echo -e "${BOLD}🔑 Akses dari Laptop via SSH Tunnel (Alternatif Zero-Lag):${NC}"
 echo -e "  Jalankan perintah ini di PowerShell laptop Anda:"
 echo -e "  ${YELLOW}ssh -N -L 8080:127.0.0.1:8080 -L 10001:127.0.0.1:10001 user@ssh.sandboxes-cloud.docker.com${NC}"
 echo -e "  Lalu buka di browser laptop Anda: ${CYAN}http://127.0.0.1:8080${NC}"
