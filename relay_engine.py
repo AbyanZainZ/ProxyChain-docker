@@ -141,13 +141,20 @@ class ProxyRelayPort:
         if method == "CONNECT":
             # CONNECT host:443 HTTP/1.1
             if ":" in target:
-                target_host, p_str = target.split(":", 1)
+                target_host, p_str = target.rsplit(":", 1)
                 target_port = int(p_str)
+                target_host = target_host.strip("[]")
             else:
-                target_host = target
+                target_host = target.strip("[]")
                 target_port = 443
         else:
             # Plain GET http://example.com/path HTTP/1.1
+            # Filter out Proxy-Authorization header so credentials aren't leaked to target
+            filtered_lines = [lines[0]]
+            for l in lines[1:]:
+                if not l.lower().startswith('proxy-authorization:'):
+                    filtered_lines.append(l)
+            header_bytes = ('\r\n'.join(filtered_lines) + '\r\n\r\n').encode('latin1')
             m = re.match(r'https?://([^/:]+)(?::(\d+))?', target, re.I)
             if m:
                 target_host = m.group(1)
@@ -380,11 +387,11 @@ class ProxyRelayPort:
                 try: dst_w.close()
                 except Exception: pass
 
-        await asyncio.gather(
-            forward(c_reader, u_writer, is_inbound=True),
-            forward(u_reader, c_writer, is_inbound=False),
-            return_exceptions=True
-        )
+        t1 = asyncio.create_task(forward(c_reader, u_writer, is_inbound=True))
+        t2 = asyncio.create_task(forward(u_reader, c_writer, is_inbound=False))
+        done, pending = await asyncio.wait([t1, t2], return_when=asyncio.FIRST_COMPLETED)
+        for t in pending:
+            t.cancel()
 
 
 # =============================================================================
