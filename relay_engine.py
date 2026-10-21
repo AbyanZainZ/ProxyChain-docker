@@ -191,11 +191,15 @@ class ProxyRelayPort:
     # =========================================================================
     async def _handle_socks5(self, first_byte: bytes, client_reader: asyncio.StreamReader, client_writer: asyncio.StreamWriter):
         # Read nmethods
-        nmethods_b = await client_reader.read(1)
-        if not nmethods_b:
+        try:
+            nmethods_b = await client_reader.readexactly(1)
+        except Exception:
             return
         nmethods = nmethods_b[0]
-        methods = await client_reader.read(nmethods)
+        try:
+            methods = await client_reader.readexactly(nmethods)
+        except Exception:
+            return
 
         # Authenticate if configured
         if self.client_user or self.client_pass:
@@ -209,13 +213,16 @@ class ProxyRelayPort:
             await client_writer.drain()
 
             # Subnegotiation RFC 1929
-            sub_ver = await client_reader.read(1)
-            if sub_ver != b'\x01':
+            try:
+                sub_ver = await client_reader.readexactly(1)
+                if sub_ver != b'\x01':
+                    return
+                ulen = (await client_reader.readexactly(1))[0]
+                uname = (await client_reader.readexactly(ulen)).decode('utf-8', errors='ignore')
+                plen = (await client_reader.readexactly(1))[0]
+                passwd = (await client_reader.readexactly(plen)).decode('utf-8', errors='ignore')
+            except Exception:
                 return
-            ulen = (await client_reader.read(1))[0]
-            uname = (await client_reader.read(ulen)).decode('utf-8', errors='ignore')
-            plen = (await client_reader.read(1))[0]
-            passwd = (await client_reader.read(plen)).decode('utf-8', errors='ignore')
 
             if uname == self.client_user and passwd == self.client_pass:
                 client_writer.write(b'\x01\x00') # Success
@@ -229,28 +236,34 @@ class ProxyRelayPort:
             await client_writer.drain()
 
         # Read SOCKS5 Request
-        req_header = await client_reader.read(4)
-        if len(req_header) < 4 or req_header[0] != 5 or req_header[1] != 1: # CMD 1 = CONNECT
+        try:
+            req_header = await client_reader.readexactly(4)
+        except Exception:
+            return
+        if req_header[0] != 5 or req_header[1] != 1: # CMD 1 = CONNECT
             client_writer.write(b'\x05\x07\x00\x01\x00\x00\x00\x00\x00\x00') # Command not supported
             await client_writer.drain()
             return
 
         atyp = req_header[3]
         target_host = ""
-        if atyp == 1: # IPv4
-            ip_b = await client_reader.read(4)
-            target_host = socket.inet_ntoa(ip_b)
-        elif atyp == 3: # Domain
-            dlen = (await client_reader.read(1))[0]
-            target_host = (await client_reader.read(dlen)).decode('utf-8', errors='ignore')
-        elif atyp == 4: # IPv6
-            ip_b = await client_reader.read(16)
-            target_host = socket.inet_ntop(socket.AF_INET6, ip_b)
-        else:
-            return
+        try:
+            if atyp == 1: # IPv4
+                ip_b = await client_reader.readexactly(4)
+                target_host = socket.inet_ntoa(ip_b)
+            elif atyp == 3: # Domain
+                dlen = (await client_reader.readexactly(1))[0]
+                target_host = (await client_reader.readexactly(dlen)).decode('utf-8', errors='ignore')
+            elif atyp == 4: # IPv6
+                ip_b = await client_reader.readexactly(16)
+                target_host = socket.inet_ntop(socket.AF_INET6, ip_b)
+            else:
+                return
 
-        port_b = await client_reader.read(2)
-        target_port = struct.unpack("!H", port_b)[0]
+            port_b = await client_reader.readexactly(2)
+            target_port = struct.unpack("!H", port_b)[0]
+        except Exception:
+            return
 
         # Connect to Upstream
         up_reader, up_writer = await self._connect_upstream(target_host, target_port)
