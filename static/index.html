@@ -99,6 +99,9 @@
                     <button class="pc-btn pc-btn-export" id="btn-copy-live" title="Salin hanya proxy yang statusnya ALIVE (format IP:PORT:USER:PASS)">
                         <span>📋 COPY ALL LIVE PROXY</span>
                     </button>
+                    <button class="pc-btn pc-btn-amber" id="btn-export-txt-box1" title="Download daftar proxy ALIVE ke file .txt">
+                        <span>📥 EXPORT TXT</span>
+                    </button>
                 </div>
 
                 <div class="pc-button-group" style="margin-top: 8px;">
@@ -185,12 +188,17 @@
 
         <!-- LOWER SECTION: LIVE RELAY PORT TABLE (FULL WIDTH) -->
         <div class="pc-card">
-            <div class="pc-card-header">
+            <div class="pc-card-header" style="flex-wrap: wrap; gap: 8px;">
                 <div>
                     <span class="pc-card-title">📊 Live Multi-Port Proxy Monitor (VPS Active Relays)</span>
                     <span style="font-size: 11px; color: var(--text-dim); margin-left: 10px;" id="lbl-table-status">Sinkronisasi tiap 4 detik</span>
                 </div>
-                <input type="text" id="table-filter" class="pc-filter-input" placeholder="🔍 Cari port / IP / negara...">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button class="pc-btn pc-btn-export" id="btn-export-txt-table" style="padding: 5px 12px; font-size: 11px;" title="Download semua endpoint format HOST:PORT:USER:PASS ke file .txt">
+                        <span>📥 EXPORT PROXY TXT</span>
+                    </button>
+                    <input type="text" id="table-filter" class="pc-filter-input" placeholder="🔍 Cari port / IP / negara...">
+                </div>
             </div>
 
             <div class="pc-table-wrapper">
@@ -204,11 +212,12 @@
                             <th>LATENCY</th>
                             <th>TRAFIK</th>
                             <th>STATUS</th>
+                            <th style="text-align: center;">AKSI</th>
                         </tr>
                     </thead>
                     <tbody id="ports-tbody">
                         <tr>
-                            <td colspan="7" class="pc-text-center pc-muted">Belum ada port proxy yang aktif. Masukkan proxy di Box 1 dan klik "JALANKAN / UPDATE RELAY".</td>
+                            <td colspan="8" class="pc-text-center pc-muted">Belum ada port proxy yang aktif. Masukkan proxy di Box 1 dan klik "JALANKAN / UPDATE RELAY".</td>
                         </tr>
                     </tbody>
                 </table>

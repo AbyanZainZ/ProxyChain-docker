@@ -421,6 +421,70 @@ async def purge_dead_active():
         "message": f"🧹 Berhasil menghapus {removed_count} proxy DEAD dari Box 1! Tersisa {len(active_proxies)} port aktif."
     }
 
+@app.delete("/api/active/port/{port}")
+async def delete_active_port(port: int):
+    global active_proxies
+    idx = port - relay_manager.start_port
+    if 0 <= idx < len(active_proxies):
+        removed = active_proxies.pop(idx)
+        new_raw = "\n".join(p.raw for p in active_proxies if p.raw)
+        save_active_proxies_file(new_raw)
+        await relay_manager.sync_proxies(active_proxies)
+        return {
+            "success": True,
+            "port": port,
+            "remaining": len(active_proxies),
+            "new_raw": new_raw,
+            "message": f"🗑️ Port {port} ({removed.protocol.upper()} {removed.host}:{removed.port}) berhasil dihapus!"
+        }
+    return {"success": False, "message": f"Port {port} tidak ditemukan."}
+
+@app.get("/api/test-relay/{port}")
+async def test_relay_port(port: int):
+    import httpx
+    cfg = load_config()
+    user = cfg.get("client_user", "gemini")
+    password = cfg.get("client_pass", "gemini")
+    proxy_url = f"http://{user}:{password}@127.0.0.1:{port}"
+    start_time = time.time()
+    try:
+        async with httpx.AsyncClient(proxies=proxy_url, timeout=8.0) as client:
+            resp = await client.get("http://api.ipify.org")
+            lat_ms = round((time.time() - start_time) * 1000, 1)
+            exit_ip = resp.text.strip()
+            return {
+                "success": True,
+                "port": port,
+                "exit_ip": exit_ip,
+                "latency_ms": lat_ms,
+                "message": f"🎉 Relay Port {port} WORK 100%! Exit IP: {exit_ip} (Ping: {lat_ms} ms)"
+            }
+    except Exception as e:
+        return {
+            "success": False,
+            "port": port,
+            "error": str(e),
+            "message": f"⚠️ Relay Port {port} Gagal: {str(e)}"
+        }
+
+@app.get("/api/export-endpoints", response_class=PlainTextResponse)
+async def export_endpoints(alive_only: bool = True):
+    srv_ip = get_server_ip()
+    user = relay_manager.client_user
+    password = relay_manager.client_pass
+    stats = relay_manager.get_all_stats()
+
+    lines = []
+    for item in stats:
+        port = item["port"]
+        up = item.get("upstream", {})
+        if alive_only and up.get("is_alive") is not True:
+            continue
+        endpoint = f"{srv_ip}:{port}:{user}:{password}" if (user and password) else f"{srv_ip}:{port}"
+        lines.append(endpoint)
+
+    return "\n".join(lines)
+
 # =============================================================================
 # BOX 2 (SCRAPE TESTING LAB / STAGING) ROUTES
 # =============================================================================

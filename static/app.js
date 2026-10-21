@@ -29,6 +29,8 @@ const tagActiveCount = document.getElementById('tag-active-count');
 const activeTextarea = document.getElementById('active-textarea');
 const btnActiveApply = document.getElementById('btn-active-apply');
 const btnCopyLive = document.getElementById('btn-copy-live');
+const btnExportTxtBox1 = document.getElementById('btn-export-txt-box1');
+const btnExportTxtTable = document.getElementById('btn-export-txt-table');
 const btnActiveCheck = document.getElementById('btn-active-check');
 const btnActivePurgeDead = document.getElementById('btn-active-purge-dead');
 const btnCopyEndpoints = document.getElementById('btn-copy-endpoints');
@@ -242,7 +244,7 @@ function renderTable(ports, srvIp, user, pass) {
     const filter = tableFilter.value.toLowerCase().trim();
 
     if (!ports || ports.length === 0) {
-        portsTbody.innerHTML = `<tr><td colspan="7" class="pc-text-center pc-muted">Belum ada port proxy aktif. Tambahkan proxy di Box 1 dan klik "JALANKAN / UPDATE RELAY".</td></tr>`;
+        portsTbody.innerHTML = `<tr><td colspan="8" class="pc-text-center pc-muted">Belum ada port proxy aktif. Tambahkan proxy di Box 1 dan klik "JALANKAN / UPDATE RELAY".</td></tr>`;
         return;
     }
 
@@ -254,7 +256,7 @@ function renderTable(ports, srvIp, user, pass) {
     });
 
     if (filtered.length === 0) {
-        portsTbody.innerHTML = `<tr><td colspan="7" class="pc-text-center pc-muted">Tidak ada proxy yang cocok dengan pencarian "${filter}".</td></tr>`;
+        portsTbody.innerHTML = `<tr><td colspan="8" class="pc-text-center pc-muted">Tidak ada proxy yang cocok dengan pencarian "${filter}".</td></tr>`;
         return;
     }
 
@@ -306,6 +308,14 @@ function renderTable(ports, srvIp, user, pass) {
             <td>${latText}</td>
             <td>${tf}</td>
             <td>${statusBadge}</td>
+            <td style="text-align: center; white-space: nowrap;">
+                <button title="Test Langsung Relay Ini" onclick="testSingleRelay(${port})" style="background: rgba(0, 229, 255, 0.15); border: 1px solid #00e5ff; color: #00e5ff; border-radius: 4px; padding: 2px 7px; font-size: 11px; cursor: pointer; margin-right: 4px;">
+                    ⚡ Test
+                </button>
+                <button title="Hapus Proxy Port Ini dari Box 1" onclick="deleteSinglePort(${port})" style="background: rgba(255, 82, 82, 0.15); border: 1px solid #ff5252; color: #ff5252; border-radius: 4px; padding: 2px 7px; font-size: 11px; cursor: pointer;">
+                    🗑️
+                </button>
+            </td>
         </tr>
         `;
     });
@@ -597,6 +607,86 @@ if (cfgPublicHost) {
         } catch (e) {}
     });
 }
+
+// ==============================================================================
+// TABLE ACTIONS & EXPORT FUNCTIONS
+// ==============================================================================
+function downloadTxtFile(filename, text) {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
+
+window.exportLiveProxiesTxt = function() {
+    if (!currentStatusData || !currentStatusData.ports) {
+        showToast('Data proxy belum siap.', true);
+        return;
+    }
+    const srvIp = currentStatusData.server_ip || '127.0.0.1';
+    const user = currentStatusData.config.client_user;
+    const pass = currentStatusData.config.client_pass;
+
+    const lines = [];
+    currentStatusData.ports.forEach(item => {
+        const up = item.upstream || {};
+        if (up.is_alive === true) {
+            const line = (user && pass) ? `${srvIp}:${item.port}:${user}:${pass}` : `${srvIp}:${item.port}`;
+            lines.push(line);
+        }
+    });
+
+    if (lines.length === 0) {
+        showToast('Belum ada proxy dengan status ALIVE untuk di-export.', true);
+        return;
+    }
+
+    const content = lines.join('\n');
+    downloadTxtFile(`proxychain_live_${lines.length}_endpoints.txt`, content);
+    showToast(`📥 Berhasil mengunduh ${lines.length} proxy LIVE!`);
+};
+
+window.testSingleRelay = async function(port) {
+    showToast(`⚡ Menguji koneksi relay port ${port}...`);
+    try {
+        const res = await fetch(`/api/test-relay/${port}`);
+        const data = await res.json();
+        if (data.success) {
+            showToast(`✅ Port ${port} WORK! Exit IP: ${data.exit_ip} (${data.latency_ms} ms)`);
+        } else {
+            showToast(`⚠️ Port ${port} Gagal: ${data.error || 'Timeout'}`, true);
+        }
+        await fetchStatus();
+    } catch (e) {
+        showToast(`❌ Error koneksi ke server saat tes port ${port}`, true);
+    }
+};
+
+window.deleteSinglePort = async function(port) {
+    if (!confirm(`Hapus proxy di port ${port} dari Box 1?`)) return;
+    try {
+        const res = await fetch(`/api/active/port/${port}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+            showToast(data.message);
+            if (activeTextarea && data.new_raw !== undefined) {
+                activeTextarea.value = data.new_raw;
+                updateActiveCount();
+            }
+            await fetchStatus();
+        } else {
+            showToast(data.message, true);
+        }
+    } catch (e) {
+        showToast('Gagal menghapus port.', true);
+    }
+};
+
+if (btnExportTxtBox1) btnExportTxtBox1.addEventListener('click', window.exportLiveProxiesTxt);
+if (btnExportTxtTable) btnExportTxtTable.addEventListener('click', window.exportLiveProxiesTxt);
 
 // START APPLICATION
 fetchRawData();
