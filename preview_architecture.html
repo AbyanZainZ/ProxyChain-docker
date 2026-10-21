@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ ProxyChain Architecture Preview & Export</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #03070d;
+            color: #e0f2fe;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .header-bar {
+            width: 100%;
+            max-width: 1280px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .title-group h1 {
+            font-size: 20px;
+            color: #00e5ff;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .title-group p {
+            font-size: 12px;
+            color: #90caf9;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: #0d2035;
+            color: #00e5ff;
+            border: 1px solid #1a3a5c;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #14375e;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00b0ff 0%, #00e5ff 100%);
+            color: #021224;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.35);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 22px rgba(0, 229, 255, 0.6);
+        }
+
+        .svg-container {
+            width: 100%;
+            max-width: 1280px;
+            background: #050b14;
+            border: 1px solid #1a3a5c;
+            border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 229, 255, 0.15);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .svg-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            background: #0d2035;
+            border: 1px solid #00e676;
+            color: #00e676;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 12px;
+            display: none;
+            box-shadow: 0 4px 20px rgba(0, 230, 118, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <div class="title-group">
+            <h1>⚡ ProxyChain Architecture Blueprint</h1>
+            <p>1280 x 720 HD Vector Blueprint • Siap Diposting ke Status / Story</p>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-primary" id="btn-download-png">
+                <span>📸 DOWNLOAD SEBAGAI GAMBAR PNG (HD)</span>
+            </button>
+            <a class="btn" href="architecture_proxychain.svg" download="architecture_proxychain.svg">
+                <span>💾 DOWNLOAD FILE .SVG ASLI</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="svg-container">
+        <img id="arch-img" src="architecture_proxychain.svg" alt="ProxyChain Architecture Diagram">
+    </div>
+
+    <div id="toast" class="toast">✅ Gambar PNG berhasil diunduh!</div>
+
+    <script>
+        const btnPng = document.getElementById('btn-download-png');
+        const toast = document.getElementById('toast');
+
+        btnPng.addEventListener('click', () => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = 'architecture_proxychain.svg?' + new Date().getTime();
+
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 2560; // 2K Ultra HD export for crystal clear status!
+                canvas.height = 1440;
+                const ctx = canvas.getContext('2d');
+
+                ctx.drawImage(img, 0, 0, 2560, 1440);
+                const pngUrl = canvas.toDataURL('image/png');
+
+                const a = document.createElement('a');
+                a.href = pngUrl;
+                a.download = 'ProxyChain_Architecture_HD.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 4000);
+            };
+        });
+    </script>
+</body>
+</html>

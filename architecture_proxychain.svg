@@ -1,0 +1,342 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" style="background:#050b14; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'JetBrains Mono', Consolas, monospace;">
+    <defs>
+        <!-- GLOW FILTERS -->
+        <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        <filter id="glow-amber" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+
+        <!-- GRADIENTS -->
+        <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#050b14" />
+            <stop offset="50%" stop-color="#071322" />
+            <stop offset="100%" stop-color="#040810" />
+        </linearGradient>
+
+        <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#0c1f36" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="#071426" stop-opacity="0.8" />
+        </linearGradient>
+
+        <linearGradient id="cyan-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00b0ff" />
+            <stop offset="100%" stop-color="#00e5ff" />
+        </linearGradient>
+
+        <linearGradient id="green-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00c853" />
+            <stop offset="100%" stop-color="#00e676" />
+        </linearGradient>
+
+        <linearGradient id="purple-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7c4dff" />
+            <stop offset="100%" stop-color="#b388ff" />
+        </linearGradient>
+
+        <!-- GRID PATTERN -->
+        <pattern id="cyber-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0e233d" stroke-width="1" stroke-opacity="0.4" />
+        </pattern>
+    </defs>
+
+    <!-- BACKGROUND -->
+    <rect width="1280" height="720" fill="url(#bg-grad)" />
+    <rect width="1280" height="720" fill="url(#cyber-grid)" />
+
+    <!-- BACKGROUND AMBIENT GLOWS -->
+    <circle cx="200" cy="200" r="180" fill="#00e5ff" opacity="0.04" filter="blur(60px)" />
+    <circle cx="640" cy="360" r="260" fill="#00b0ff" opacity="0.05" filter="blur(80px)" />
+    <circle cx="1080" cy="400" r="200" fill="#00e676" opacity="0.04" filter="blur(60px)" />
+
+    <!-- ===================================================================== -->
+    <!-- TOP HEADER -->
+    <!-- ===================================================================== -->
+    <g transform="translate(60, 45)">
+        <!-- Title Badge -->
+        <rect x="0" y="0" width="130" height="24" rx="12" fill="#0d2847" stroke="#00e5ff" stroke-width="1" />
+        <text x="65" y="16" fill="#00e5ff" font-size="11" font-weight="bold" text-anchor="middle" letter-spacing="1.5">ENTERPRISE IaaS</text>
+
+        <!-- Main Title -->
+        <text x="0" y="60" fill="#ffffff" font-size="28" font-weight="900" letter-spacing="0.5">
+            ⚡ PROXYCHAIN <tspan fill="#00e5ff">GATEWAY ARCHITECTURE</tspan>
+        </text>
+        <text x="0" y="84" fill="#90caf9" font-size="13" font-weight="500" letter-spacing="0.3">
+            Multi-Port Authenticated Proxy Forwarder, Chaining Relay &amp; Live Health-Check Engine
+        </text>
+
+        <!-- Status Tag -->
+        <g transform="translate(1000, 15)">
+            <rect x="0" y="0" width="160" height="32" rx="16" fill="#062818" stroke="#00e676" stroke-width="1.2" />
+            <circle cx="18" cy="16" r="5" fill="#00e676" filter="url(#glow-green)" />
+            <text x="90" y="21" fill="#00e676" font-size="12" font-weight="bold" text-anchor="middle">ACTIVE &amp; ONLINE</text>
+        </g>
+    </g>
+
+    <!-- ===================================================================== -->
+    <!-- FLOW CONNECTORS / DATA BUS -->
+    <!-- ===================================================================== -->
+    <!-- Line 1 to 2 -->
+    <path d="M 285 350 L 375 350" stroke="#00e5ff" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.8" />
+    <polygon points="375,346 385,350 375,354" fill="#00e5ff" />
+
+    <!-- Line 2 to 3 -->
+    <path d="M 685 350 L 775 350" stroke="#00e676" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.8" />
+    <polygon points="775,346 785,350 775,354" fill="#00e676" />
+
+    <!-- Line 3 to 4 -->
+    <path d="M 995 350 L 1055 350" stroke="#b388ff" stroke-width="2.5" stroke-dasharray="6,4" opacity="0.8" />
+    <polygon points="1055,346 1065,350 1055,354" fill="#b388ff" />
+
+    <!-- ===================================================================== -->
+    <!-- CARD 1: CLIENTS & BOTS -->
+    <!-- ===================================================================== -->
+    <g transform="translate(60, 170)">
+        <rect width="225" height="360" rx="14" fill="url(#card-grad)" stroke="#1a3a5c" stroke-width="1.5" />
+        
+        <!-- Header -->
+        <rect x="0" y="0" width="225" height="42" rx="14" fill="#0a1d33" />
+        <rect x="0" y="28" width="225" height="14" fill="#0a1d33" />
+        <line x1="0" y1="42" x2="225" y2="42" stroke="#1a3a5c" stroke-width="1" />
+        <text x="18" y="27" fill="#00e5ff" font-size="13" font-weight="bold">📱 CLIENTS &amp; BOTS</text>
+
+        <!-- Subtitle -->
+        <text x="18" y="65" fill="#78909c" font-size="10.5">End-User Application Layer</text>
+
+        <!-- Client Nodes -->
+        <g transform="translate(16, 80)">
+            <rect width="193" height="48" rx="8" fill="#091728" stroke="#16385a" stroke-width="1" />
+            <text x="14" y="22" fill="#e0f2fe" font-size="11.5" font-weight="bold">Colab Notebooks</text>
+            <text x="14" y="38" fill="#40c4ff" font-size="9.5">TraffMonetizer / Vidara</text>
+            <circle cx="175" cy="24" r="4" fill="#00e676" />
+        </g>
+
+        <g transform="translate(16, 138)">
+            <rect width="193" height="48" rx="8" fill="#091728" stroke="#16385a" stroke-width="1" />
+            <text x="14" y="22" fill="#e0f2fe" font-size="11.5" font-weight="bold">Browser &amp; Scraping</text>
+            <text x="14" y="38" fill="#40c4ff" font-size="9.5">Playwright / Camoufox</text>
+            <circle cx="175" cy="24" r="4" fill="#00e676" />
+        </g>
+
+        <g transform="translate(16, 196)">
+            <rect width="193" height="48" rx="8" fill="#091728" stroke="#16385a" stroke-width="1" />
+            <text x="14" y="22" fill="#e0f2fe" font-size="11.5" font-weight="bold">Passive Income Nodes</text>
+            <text x="14" y="38" fill="#40c4ff" font-size="9.5">EarnFM / Bitping / AntGain</text>
+            <circle cx="175" cy="24" r="4" fill="#00e676" />
+        </g>
+
+        <!-- Connecting Info Box -->
+        <g transform="translate(16, 260)">
+            <rect width="193" height="75" rx="8" fill="#05101c" stroke="#00e5ff" stroke-width="1" stroke-dasharray="3,3" />
+            <text x="12" y="20" fill="#00e5ff" font-size="10" font-weight="bold">STANDARD CONNECTION:</text>
+            <text x="12" y="38" fill="#ffffff" font-size="10" font-family="'Consolas', monospace">120.100.200.123:10001</text>
+            <text x="12" y="54" fill="#ffd600" font-size="10" font-family="'Consolas', monospace">User: gemini</text>
+            <text x="12" y="68" fill="#ffd600" font-size="10" font-family="'Consolas', monospace">Pass: gemini</text>
+        </g>
+    </g>
+
+    <!-- ===================================================================== -->
+    <!-- CARD 2: PROXYCHAIN CORE GATEWAY (VPS / LOCALHOST) -->
+    <!-- ===================================================================== -->
+    <g transform="translate(385, 140)">
+        <!-- Outer Glowing Card -->
+        <rect width="300" height="420" rx="16" fill="url(#card-grad)" stroke="#00e5ff" stroke-width="1.8" filter="drop-shadow(0 0 15px rgba(0,229,255,0.2))" />
+        
+        <!-- Header -->
+        <rect x="0" y="0" width="300" height="48" rx="16" fill="#0b2440" />
+        <rect x="0" y="32" width="300" height="16" fill="#0b2440" />
+        <line x1="0" y1="48" x2="300" y2="48" stroke="#1a4d7d" stroke-width="1" />
+        <text x="20" y="30" fill="#00e5ff" font-size="14" font-weight="900">🖥️ PROXYCHAIN CORE (VPS)</text>
+        <text x="220" y="30" fill="#90caf9" font-size="11" font-weight="bold">120.100.200.123</text>
+
+        <!-- 1. Authentication Layer -->
+        <g transform="translate(18, 62)">
+            <rect width="264" height="42" rx="8" fill="#071b30" stroke="#00e5ff" stroke-width="1" />
+            <text x="14" y="18" fill="#00e5ff" font-size="10.5" font-weight="bold">🔒 Inbound Auth Guard</text>
+            <text x="14" y="33" fill="#90caf9" font-size="9.5">Validasi Kredensial: gemini : gemini</text>
+            <rect x="200" y="10" width="52" height="20" rx="10" fill="#004d2a" />
+            <text x="226" y="24" fill="#00e676" font-size="9.5" font-weight="bold" text-anchor="middle">PASSED</text>
+        </g>
+
+        <!-- 2. Dual-Engine Protocol Auto-Sensing -->
+        <g transform="translate(18, 114)">
+            <rect width="264" height="44" rx="8" fill="#071b30" stroke="#1b4670" stroke-width="1" />
+            <text x="14" y="18" fill="#ffd600" font-size="10.5" font-weight="bold">⚡ Protocol Auto-Sensing</text>
+            <text x="14" y="34" fill="#90caf9" font-size="9.5">Dual Mode: HTTP CONNECT + SOCKS5</text>
+        </g>
+
+        <!-- 3. Multi-Port Relay Engine Grid -->
+        <g transform="translate(18, 168)">
+            <rect width="264" height="98" rx="8" fill="#051424" stroke="#1b4670" stroke-width="1" />
+            <text x="12" y="18" fill="#e0f2fe" font-size="10" font-weight="bold">ACTIVE RELAY PORTS (MAPPING):</text>
+            
+            <!-- Port 10001 -->
+            <rect x="12" y="26" width="240" height="20" rx="4" fill="#091f36" />
+            <text x="20" y="40" fill="#00e5ff" font-size="9.5" font-weight="bold">PORT 10001</text>
+            <text x="95" y="40" fill="#90caf9" font-size="9.5">➔ Upstream #1 (78.29.56)</text>
+            <circle cx="240" cy="36" r="3.5" fill="#00e676" />
+
+            <!-- Port 10002 -->
+            <rect x="12" y="49" width="240" height="20" rx="4" fill="#091f36" />
+            <text x="20" y="63" fill="#00e5ff" font-size="9.5" font-weight="bold">PORT 10002</text>
+            <text x="95" y="63" fill="#90caf9" font-size="9.5">➔ Upstream #2 (198.105)</text>
+            <circle cx="240" cy="59" r="3.5" fill="#00e676" />
+
+            <!-- Port 10003 -->
+            <rect x="12" y="72" width="240" height="20" rx="4" fill="#091f36" />
+            <text x="20" y="86" fill="#00e5ff" font-size="9.5" font-weight="bold">PORT 10003</text>
+            <text x="95" y="86" fill="#90caf9" font-size="9.5">➔ Upstream #3 (31.58.9)</text>
+            <circle cx="240" cy="82" r="3.5" fill="#00e676" />
+        </g>
+
+        <!-- 4. Web Dashboard & Health-Checker -->
+        <g transform="translate(18, 276)">
+            <rect width="264" height="60" rx="8" fill="#071b30" stroke="#1b4670" stroke-width="1" />
+            <text x="14" y="20" fill="#00e676" font-size="10.5" font-weight="bold">🎛️ Cyber Cockpit Web Dashboard</text>
+            <text x="14" y="36" fill="#90caf9" font-size="9.5">Web UI: http://120.100.200.123:8080</text>
+            <text x="14" y="50" fill="#78909c" font-size="9.5">Auto-Healthcheck Ping &amp; Live RTT</text>
+        </g>
+
+        <!-- Core Specs Footer -->
+        <g transform="translate(18, 348)">
+            <rect width="264" height="52" rx="8" fill="#040d17" stroke="#14375a" stroke-width="1" />
+            <text x="16" y="22" fill="#78909c" font-size="9">RAM USAGE: <tspan fill="#00e5ff" font-weight="bold">&lt; 35 MB</tspan></text>
+            <text x="140" y="22" fill="#78909c" font-size="9">CPU USAGE: <tspan fill="#00e676" font-weight="bold">~2%</tspan></text>
+            <text x="16" y="40" fill="#78909c" font-size="9">SOCKET PIPING: <tspan fill="#ffd600" font-weight="bold">Async Zero-Copy</tspan></text>
+        </g>
+    </g>
+
+    <!-- ===================================================================== -->
+    <!-- CARD 3: UPSTREAM PROXY POOL -->
+    <!-- ===================================================================== -->
+    <g transform="translate(785, 170)">
+        <rect width="210" height="360" rx="14" fill="url(#card-grad)" stroke="#1a3a5c" stroke-width="1.5" />
+        
+        <!-- Header -->
+        <rect x="0" y="0" width="210" height="42" rx="14" fill="#0a1d33" />
+        <rect x="0" y="28" width="210" height="14" fill="#0a1d33" />
+        <line x1="0" y1="42" x2="210" y2="42" stroke="#1a3a5c" stroke-width="1" />
+        <text x="16" y="27" fill="#00e676" font-size="13" font-weight="bold">🌍 UPSTREAM POOL</text>
+
+        <!-- Subtitle -->
+        <text x="16" y="65" fill="#78909c" font-size="10.5">Raw Heterogeneous Proxies</text>
+
+        <!-- Upstream Nodes -->
+        <g transform="translate(14, 80)">
+            <rect width="182" height="60" rx="8" fill="#091728" stroke="#16385a" stroke-width="1" />
+            <text x="12" y="20" fill="#00e676" font-size="10.5" font-weight="bold">[SOCKS5] Public</text>
+            <text x="12" y="36" fill="#e0f2fe" font-size="9.5" font-family="'Consolas', monospace">78.29.56.178:1080</text>
+            <text x="12" y="50" fill="#78909c" font-size="9">🇩🇪 Germany • 35 ms</text>
+        </g>
+
+        <g transform="translate(14, 150)">
+            <rect width="182" height="60" rx="8" fill="#091728" stroke="#16385a" stroke-width="1" />
+            <text x="12" y="20" fill="#00e5ff" font-size="10.5" font-weight="bold">[HTTP] Private Auth</text>
+            <text x="12" y="36" fill="#e0f2fe" font-size="9.5" font-family="'Consolas', monospace">198.105.121:6382</text>
+            <text x="12" y="50" fill="#78909c" font-size="9">🇺🇸 United States • 80 ms</text>
+        </g>
+
+        <g transform="translate(14, 220)">
+            <rect width="182" height="60" rx="8" fill="#091728" stroke="#16385a" stroke-width="1" />
+            <text x="12" y="20" fill="#ffd600" font-size="10.5" font-weight="bold">[HTTP] Residential</text>
+            <text x="12" y="36" fill="#e0f2fe" font-size="9.5" font-family="'Consolas', monospace">31.58.9.4:6077</text>
+            <text x="12" y="50" fill="#78909c" font-size="9">🇸🇬 Singapore • 22 ms</text>
+        </g>
+
+        <!-- Upstream Pool Footer -->
+        <g transform="translate(14, 292)">
+            <rect width="182" height="48" rx="8" fill="#05101c" stroke="#16385a" stroke-width="1" />
+            <text x="12" y="20" fill="#90caf9" font-size="9.5">Universal Parser Input:</text>
+            <text x="12" y="36" fill="#00e676" font-size="9.5" font-weight="bold">proxies.txt (Auto-Parsed)</text>
+        </g>
+    </g>
+
+    <!-- ===================================================================== -->
+    <!-- CARD 4: TARGET INTERNET & CLOAKING -->
+    <!-- ===================================================================== -->
+    <g transform="translate(1065, 170)">
+        <rect width="155" height="360" rx="14" fill="url(#card-grad)" stroke="#1a3a5c" stroke-width="1.5" />
+        
+        <!-- Header -->
+        <rect x="0" y="0" width="155" height="42" rx="14" fill="#0a1d33" />
+        <rect x="0" y="28" width="155" height="14" fill="#0a1d33" />
+        <line x1="0" y1="42" x2="155" y2="42" stroke="#1a3a5c" stroke-width="1" />
+        <text x="14" y="27" fill="#b388ff" font-size="12" font-weight="bold">🌐 TARGET WEB</text>
+
+        <!-- Targets -->
+        <g transform="translate(12, 65)">
+            <rect width="131" height="40" rx="6" fill="#091728" stroke="#1b3654" stroke-width="1" />
+            <text x="10" y="24" fill="#ffffff" font-size="10.5" font-weight="bold">Google / Cloudflare</text>
+        </g>
+        <g transform="translate(12, 115)">
+            <rect width="131" height="40" rx="6" fill="#091728" stroke="#1b3654" stroke-width="1" />
+            <text x="10" y="24" fill="#ffffff" font-size="10.5" font-weight="bold">Vidara / Video APIs</text>
+        </g>
+        <g transform="translate(12, 165)">
+            <rect width="131" height="40" rx="6" fill="#091728" stroke="#1b3654" stroke-width="1" />
+            <text x="10" y="24" fill="#ffffff" font-size="10.5" font-weight="bold">E-Commerce / Social</text>
+        </g>
+
+        <!-- Final Exit Cloak Banner -->
+        <g transform="translate(12, 225)">
+            <rect width="131" height="115" rx="8" fill="#150a24" stroke="#b388ff" stroke-width="1.2" />
+            <text x="10" y="22" fill="#b388ff" font-size="10" font-weight="bold">🛡️ EXIT IP SEEN:</text>
+            <text x="10" y="44" fill="#00e676" font-size="11" font-weight="900" font-family="'Consolas', monospace">78.29.56.178</text>
+            <text x="10" y="66" fill="#90caf9" font-size="9">IP VPS &amp; Klien</text>
+            <text x="10" y="80" fill="#00e5ff" font-size="9" font-weight="bold">100% TERSEMBUNYI</text>
+            <text x="10" y="100" fill="#ffd600" font-size="8.5">✔ Zero IP Leaks</text>
+        </g>
+    </g>
+
+    <!-- ===================================================================== -->
+    <!-- BOTTOM FEATURE HIGHLIGHT BADGES -->
+    <!-- ===================================================================== -->
+    <g transform="translate(60, 580)">
+        <!-- Badge 1 -->
+        <g transform="translate(0, 0)">
+            <rect width="215" height="50" rx="10" fill="#081729" stroke="#153659" stroke-width="1" />
+            <text x="15" y="22" fill="#00e5ff" font-size="11.5" font-weight="bold">⚡ Dual-Engine Inbound</text>
+            <text x="15" y="38" fill="#78909c" font-size="10">Auto-Detect HTTP &amp; SOCKS5</text>
+        </g>
+
+        <!-- Badge 2 -->
+        <g transform="translate(235, 0)">
+            <rect width="215" height="50" rx="10" fill="#081729" stroke="#153659" stroke-width="1" />
+            <text x="15" y="22" fill="#00e676" font-size="11.5" font-weight="bold">🔒 Secure Authentication</text>
+            <text x="15" y="38" fill="#78909c" font-size="10">Kredensial Publik Kustom</text>
+        </g>
+
+        <!-- Badge 3 -->
+        <g transform="translate(470, 0)">
+            <rect width="215" height="50" rx="10" fill="#081729" stroke="#153659" stroke-width="1" />
+            <text x="15" y="22" fill="#ffd600" font-size="11.5" font-weight="bold">🩺 Live Health-Checker</text>
+            <text x="15" y="38" fill="#78909c" font-size="10">Auto Latency &amp; GeoIP Lookup</text>
+        </g>
+
+        <!-- Badge 4 -->
+        <g transform="translate(705, 0)">
+            <rect width="215" height="50" rx="10" fill="#081729" stroke="#153659" stroke-width="1" />
+            <text x="15" y="22" fill="#b388ff" font-size="11.5" font-weight="bold">📋 One-Click Export</text>
+            <text x="15" y="38" fill="#78909c" font-size="10">Salin Endpoint Siap Pakai</text>
+        </g>
+
+        <!-- Badge 5 -->
+        <g transform="translate(940, 0)">
+            <rect width="220" height="50" rx="10" fill="#081729" stroke="#153659" stroke-width="1" />
+            <text x="15" y="22" fill="#00e5ff" font-size="11.5" font-weight="bold">🖥️ Dual Mode Execution</text>
+            <text x="15" y="38" fill="#78909c" font-size="10">Localhost PC + Linux VPS 24/7</text>
+        </g>
+    </g>
+
+    <!-- FOOTER COPYRIGHT -->
+    <text x="640" y="695" fill="#37474f" font-size="11" text-anchor="middle" letter-spacing="1">
+        DESIGNED BY ANTIGRAVITY FOR ABYAN • HIGH-PERFORMANCE PROXY RELAY ARCHITECTURE
+    </text>
+</svg>

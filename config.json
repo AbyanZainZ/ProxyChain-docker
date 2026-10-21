@@ -1,0 +1,12 @@
+{
+  "host": "0.0.0.0",
+  "dashboard_port": 8080,
+  "proxy_start_port": 10001,
+  "client_user": "gemini",
+  "client_pass": "gemini",
+  "check_target_url": "http://api.ipify.org",
+  "check_timeout": 6.0,
+  "auto_purge_dead": true,
+  "auto_purge_interval_minutes": 10,
+  "public_host": ""
+}

@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.git/
+.gitignore
+venv/
+env/
+*.log
+.DS_Store
+run_localhost.bat
+*.ps1

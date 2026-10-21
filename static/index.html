@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ ProxyChain Gateway v2 — Cyber Cockpit</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22><text y=%2226%22 font-size=%2226%22>⚡</text></svg>">
+</head>
+<body>
+    <div class="pc-container">
+        <!-- TOP HEADER -->
+        <header class="pc-header">
+            <div class="pc-brand">
+                <span class="pc-logo-icon">⚡</span>
+                <div>
+                    <h1 class="pc-title">PROXYCHAIN GATEWAY v2</h1>
+                    <p class="pc-subtitle">Dual-Box Staging Lab & Multi-Port Relay Engine</p>
+                </div>
+            </div>
+            <div class="pc-header-stats">
+                <div class="pc-chip" id="chip-server-ip">
+                    <span class="pc-chip-label">SERVER IP:</span>
+                    <span class="pc-chip-value" id="val-server-ip">Detecting...</span>
+                </div>
+                <div class="pc-badge-live" id="badge-live-pulse">
+                    <span class="pc-pulse-dot"></span>
+                    <span>LIVE SYNC</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- METRIC CARDS -->
+        <div class="pc-metrics-grid">
+            <div class="pc-card pc-metric-card" style="border-left-color: #00e5ff;">
+                <div class="pc-metric-label">RELAY POOL (BOX 1)</div>
+                <div class="pc-metric-value" style="color: #00e5ff;" id="stat-total-proxies">0</div>
+                <div class="pc-metric-desc" id="stat-ports-range">Port 10001 - 10000</div>
+            </div>
+            <div class="pc-card pc-metric-card" style="border-left-color: #00e676;">
+                <div class="pc-metric-label">BOX 1 ALIVE / READY</div>
+                <div class="pc-metric-value" style="color: #00e676;" id="stat-alive-proxies">0</div>
+                <div class="pc-metric-desc" id="stat-alive-pct">0% Siap Pakai</div>
+            </div>
+            <div class="pc-card pc-metric-card" style="border-left-color: #b388ff;">
+                <div class="pc-metric-label">SCRAPE LAB (BOX 2)</div>
+                <div class="pc-metric-value" style="color: #b388ff;" id="stat-staging-total">0</div>
+                <div class="pc-metric-desc" id="stat-staging-desc">0 Alive • 0 Dead</div>
+            </div>
+            <div class="pc-card pc-metric-card" style="border-left-color: #ffd600;">
+                <div class="pc-metric-label">ACTIVE CONNECTIONS</div>
+                <div class="pc-metric-value" style="color: #ffd600;" id="stat-active-conns">0</div>
+                <div class="pc-metric-desc" id="stat-data-transfer">0 B Transfer</div>
+            </div>
+        </div>
+
+        <!-- DUAL-BOX WORKFLOW LAYOUT -->
+        <div class="pc-dual-grid">
+            <!-- ========================================================= -->
+            <!-- BOX 1: PRODUCTION RELAY POOL (ACTIVE)                     -->
+            <!-- ========================================================= -->
+            <div class="pc-card pc-panel-box1">
+                <div class="pc-card-header">
+                    <span class="pc-card-title">⚡ BOX 1: PRODUCTION RELAY POOL</span>
+                    <span class="pc-tag" id="tag-active-count">0 Aktif</span>
+                </div>
+
+                <!-- GLOBAL AUTH SETTINGS -->
+                <div class="pc-form-row">
+                    <div class="pc-input-group">
+                        <label>Auth Username</label>
+                        <input type="text" id="cfg-user" placeholder="gemini">
+                    </div>
+                    <div class="pc-input-group">
+                        <label>Auth Password</label>
+                        <input type="text" id="cfg-pass" placeholder="gemini">
+                    </div>
+                    <div class="pc-input-group">
+                        <label>Start Port</label>
+                        <input type="number" id="cfg-start-port" value="10001" min="1024" max="65000">
+                    </div>
+                    <div class="pc-input-group">
+                        <label>Public Host / IP (Optional)</label>
+                        <input type="text" id="cfg-public-host" placeholder="Auto-Detect (VPS / 127.0.0.1)">
+                    </div>
+                </div>
+
+                <!-- TEXTAREA BOX 1 -->
+                <div class="pc-input-group" style="margin-top: 10px;">
+                    <label>Proxy Terverifikasi (Melayani Port Relay di VPS):</label>
+                    <textarea id="active-textarea" class="pc-textarea" style="height: 175px;" placeholder="Daftar proxy yang aktif membuka port relay di VPS...&#10;Proxy LIVE dari Box 2 akan otomatis masuk ke sini."></textarea>
+                </div>
+
+                <!-- BUTTON ACTIONS BOX 1 -->
+                <div class="pc-button-group">
+                    <button class="pc-btn pc-btn-primary" id="btn-active-apply" title="Buka/Perbarui port VPS sesuai isi Box 1">
+                        <span>🚀 JALANKAN / UPDATE RELAY</span>
+                    </button>
+                    <button class="pc-btn pc-btn-export" id="btn-copy-live" title="Salin hanya proxy yang statusnya ALIVE (format IP:PORT:USER:PASS)">
+                        <span>📋 COPY ALL LIVE PROXY</span>
+                    </button>
+                </div>
+
+                <div class="pc-button-group" style="margin-top: 8px;">
+                    <button class="pc-btn pc-btn-check" id="btn-active-check" title="Cek ulang kesehatan proxy yang sedang aktif di Box 1">
+                        <span>🩺 AUDIT KESEHATAN BOX 1</span>
+                    </button>
+                    <button class="pc-btn pc-btn-danger" id="btn-active-purge-dead" title="Hapus semua proxy DEAD dari Box 1 dan matikan portnya">
+                        <span>🗑️ DELETE ALL DEAD PROXY</span>
+                    </button>
+                </div>
+
+                <!-- AUTO-PURGE DEAD PROXY CONTROLS -->
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; background: rgba(0, 229, 255, 0.05); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(0, 229, 255, 0.2);">
+                    <label class="pc-checkbox-row" style="margin-top: 0; color: #e0f7fa;">
+                        <input type="checkbox" id="chk-auto-purge-box1" checked>
+                        <span>Auto-Delete Dead Proxy tiap:</span>
+                    </label>
+                    <select id="sel-purge-interval" style="background: #091728; color: #00e5ff; border: 1px solid #005b82; border-radius: 4px; padding: 2px 6px; font-size: 11px; outline: none; cursor: pointer;">
+                        <option value="5">5 Menit</option>
+                        <option value="10" selected>10 Menit</option>
+                        <option value="15">15 Menit</option>
+                        <option value="30">30 Menit</option>
+                        <option value="60">60 Menit</option>
+                    </select>
+                </div>
+
+                <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <button class="pc-btn pc-btn-outline" id="btn-copy-endpoints" style="padding: 3px 8px; font-size: 10.5px;">
+                        <span>📋 Salin Semua Port (Termasuk Pending)</span>
+                    </button>
+                    <button class="pc-btn pc-btn-outline" id="btn-clear-active" style="padding: 3px 8px; font-size: 10.5px;">
+                        <span>🧹 Kosongkan Box 1</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- BOX 2: SCRAPE TESTING LAB (STAGING)                       -->
+            <!-- ========================================================= -->
+            <div class="pc-card pc-panel-box2">
+                <div class="pc-card-header">
+                    <span class="pc-card-title" style="color: #b388ff;">🧪 BOX 2: SCRAPE TESTING LAB</span>
+                    <span class="pc-tag pc-tag-purple" id="tag-staging-count">0 Mentah</span>
+                </div>
+
+                <p style="font-size: 11px; color: #90a4ae; margin-bottom: 8px;">
+                    Tempel proxy baru hasil scraping di sini. Uji kesehatan secara independen tanpa memutus atau mengganggu port relay di Box 1.
+                </p>
+
+                <!-- TEXTAREA BOX 2 -->
+                <div class="pc-input-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <label style="color: #d1b3ff; margin-bottom: 0;">Daftar Proxy Mentah Hasil Scraping:</label>
+                        <button class="pc-btn pc-btn-danger" id="btn-staging-clear" style="padding: 2px 8px; font-size: 10.5px; height: 22px;">
+                            <span>🧹 HAPUS / KOSONGKAN BOX 2</span>
+                        </button>
+                    </div>
+                    <textarea id="staging-textarea" class="pc-textarea" style="height: 175px; border-color: #31215c;" placeholder="Tempel proxy mentah hasil scraping di sini...&#10;Contoh format bebas:&#10;45.38.107.97:6014:user:pass&#10;socks5|78.29.56.178:1080&#10;http://31.58.9.4:6077"></textarea>
+                </div>
+
+                <!-- CHECKBOX AUTO-TRANSFER -->
+                <label class="pc-checkbox-row">
+                    <input type="checkbox" id="chk-auto-transfer" checked>
+                    <span>Otomatis transfer proxy ALIVE ke Box 1 setelah tes selesai</span>
+                </label>
+
+                <!-- BUTTON ACTIONS BOX 2 -->
+                <div class="pc-button-group">
+                    <button class="pc-btn pc-btn-purple" id="btn-staging-test" title="Uji kesehatan semua proxy di Box 2 secara asynchronous">
+                        <span>🩺 TEST PROXY SCRAPE</span>
+                    </button>
+                    <button class="pc-btn pc-btn-amber" id="btn-staging-transfer" title="Pindahkan semua proxy yang lolos uji (ALIVE) dari Box 2 ke Box 1">
+                        <span>➡️ TRANSFER LIVE KE BOX 1</span>
+                    </button>
+                </div>
+
+                <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="lbl-staging-summary" style="font-size: 11px; color: #b0bec5; font-family: var(--font-mono);">
+                        Lab Ready • Belum ada tes
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOWER SECTION: LIVE RELAY PORT TABLE (FULL WIDTH) -->
+        <div class="pc-card">
+            <div class="pc-card-header">
+                <div>
+                    <span class="pc-card-title">📊 Live Multi-Port Proxy Monitor (VPS Active Relays)</span>
+                    <span style="font-size: 11px; color: var(--text-dim); margin-left: 10px;" id="lbl-table-status">Sinkronisasi tiap 4 detik</span>
+                </div>
+                <input type="text" id="table-filter" class="pc-filter-input" placeholder="🔍 Cari port / IP / negara...">
+            </div>
+
+            <div class="pc-table-wrapper">
+                <table class="pc-table">
+                    <thead>
+                        <tr>
+                            <th>PORT</th>
+                            <th>ENDPOINT SIAP PAKAI (CLIENT)</th>
+                            <th>UPSTREAM ASLI</th>
+                            <th>EXIT IP & LOKASI</th>
+                            <th>LATENCY</th>
+                            <th>TRAFIK</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ports-tbody">
+                        <tr>
+                            <td colspan="7" class="pc-text-center pc-muted">Belum ada port proxy yang aktif. Masukkan proxy di Box 1 dan klik "JALANKAN / UPDATE RELAY".</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="pc-footer" style="margin-top: 14px;">
+            <span>⚡ ProxyChain Gateway v2.0 • Dual-Box Architecture (Staging & Production)</span>
+            <span id="health-check-status-text">Ready</span>
+        </footer>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="pc-toast" class="pc-toast"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

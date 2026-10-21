@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  proxychain:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: abyan/proxychain:latest
+    container_name: proxychain
+    restart: unless-stopped
+
+    # =========================================================================
+    # NETWORKING MODE
+    # =========================================================================
+    # Rekomendasi Utama (Linux VPS / Cloud Sandbox):
+    # network_mode: host memungkinkan ProxyChain membuka ratusan port dinamis
+    # tanpa batasan alokasi port Docker.
+    network_mode: "host"
+
+    # Alternatif (Bridge Mode untuk Docker Desktop di Windows / Mac):
+    # Jika menggunakan Windows/Mac, komentari 'network_mode: host' di atas,
+    # lalu aktifkan blok 'ports' di bawah ini:
+    # ports:
+    #   - "8080:8080"
+    #   - "10001-10050:10001-10050"
+
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PROXYCHAIN_HOST=0.0.0.0
+      - PROXYCHAIN_DASHBOARD_PORT=8080
+      - PROXYCHAIN_START_PORT=10001
+      - PROXYCHAIN_USER=gemini
+      - PROXYCHAIN_PASS=gemini
+      # Masukkan IP VPS / domain / 127.0.0.1 (jika pakai SSH tunnel), atau kosongkan untuk auto-detect:
+      # - PROXYCHAIN_PUBLIC_HOST=
+
+    volumes:
+      # Persistence data agar konfigurasi dan proxy tersimpan di host
+      - ./config.json:/app/config.json
+      - ./proxies.txt:/app/proxies.txt
+      - ./proxies_active.txt:/app/proxies_active.txt
+      - ./proxies_staging.txt:/app/proxies_staging.txt

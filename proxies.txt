@@ -1,0 +1,18 @@
+# ==============================================================================
+# PROXYCHAIN - DAFTAR UPSTREAM PROXY
+# Tempel daftar proxy Anda di sini (1 proxy per baris).
+# Baris yang diawali dengan tanda # akan diabaikan.
+# ==============================================================================
+
+198.105.121.120:6382:thosxyue:sunvk9xa5oox
+191.96.254.138:6185:fkgwqrpo:abusqmysas7n
+31.58.9.4:6077:alexkad58:alexkad58
+34.43.46.91:80:turbo:vip3060
+34.43.46.91:80:premium:vip7394
+34.43.46.91:443:premium:vip5452
+176.111.37.216:39811:bahr:vip7252
+188.245.58.129:11361:qpmcy1xm:wgj6q7ns5gfs
+socks5|78.29.56.178:1080
+socks5|79.137.198.71:7777
+socks5|83.147.217.103:1080
+socks5|84.254.198.175:1080
