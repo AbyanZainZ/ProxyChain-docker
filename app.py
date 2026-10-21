@@ -448,7 +448,13 @@ async def test_relay_port(port: int):
     proxy_url = f"http://{user}:{password}@127.0.0.1:{port}"
     start_time = time.time()
     try:
-        async with httpx.AsyncClient(proxies=proxy_url, timeout=8.0) as client:
+        # Support both httpx proxy= and proxies= across versions
+        try:
+            client_ctx = httpx.AsyncClient(proxy=proxy_url, timeout=8.0, verify=False)
+        except TypeError:
+            client_ctx = httpx.AsyncClient(proxies=proxy_url, timeout=8.0, verify=False)
+
+        async with client_ctx as client:
             resp = await client.get("http://api.ipify.org")
             lat_ms = round((time.time() - start_time) * 1000, 1)
             exit_ip = resp.text.strip()
